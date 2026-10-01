@@ -30,6 +30,7 @@
           - php-mysql
           - php-xml
           - php-zip
+          - python3-pymysql
         state: latest
         update_cache: yes
 
@@ -54,5 +55,17 @@
       become: yes
       notify:
         - restart apache
-
-
+    - name: Create a new database with name 'wordpress_db'
+      community.mysql.mysql_db:
+        name: wordpress_db
+        state: present
+        login_unix_socket: /var/run/mysqld/mysqld.sock
+      become: yes
+    - name: Criar usuario do banco de dados com nome 'wordpress_user' e senha '12345' com todos os privilegios de banco de dados
+      ansible.builtin.command:
+        cmd: mysql -e "CREATE USER IF NOT EXISTS 'wordpress_user'@'localhost' IDENTIFIED BY '12345'; GRANT ALL PRIVILEGES ON wordpress_db.* TO 'wordpress_user'@'localhost'; FLUSH PRIVILEGES;"
+    - name: Garantir que o Apache esta a rodar com as configuracoes atualizadas
+      ansible.builtin.service:
+        name: apache2
+        state: restarted
+   
