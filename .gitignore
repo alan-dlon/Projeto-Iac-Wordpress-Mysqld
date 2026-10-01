@@ -48,3 +48,15 @@ Thumbs.db
 *.mov
 *.wmv
 
+# Pasta do Terraform com binários pesados
+.terraform/
+.terraform.lock.hcl
+
+# Arquivos de estado e chaves sensíveis
+*.tfstate
+*.tfstate.backup
+*.pem
+
+# Logs e Ambientes Virtuais
+*.log
+venv/
