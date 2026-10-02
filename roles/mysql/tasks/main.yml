@@ -1,0 +1,23 @@
+
+    - name: 1. Instalar MySQL Server e dependencias
+      ansible.builtin.apt:
+        pkg:
+          - mysql-server
+          - python3-pymysql
+        state: latest
+        update_cache: yes
+
+    - name: 2. Liberar MySQL para aceitar conexoes da rede (bind-address)
+      ansible.builtin.lineinfile:
+        path: /etc/mysql/mysql.conf.d/mysqld.cnf
+        regexp: '^bind-address'
+        line: 'bind-address = 0.0.0.0'
+      notify: Reiniciar mysql
+
+    - name: 3. Criar banco de dados 'wordpress_db'
+      ansible.builtin.command:
+        cmd: mysql -e "CREATE DATABASE IF NOT EXISTS wordpress_db;"
+
+    - name: 4. Criar usuario do banco com acesso remoto ('%')
+      ansible.builtin.command:
+        cmd: mysql -e "CREATE USER IF NOT EXISTS 'wordpress_user'@'%' IDENTIFIED BY '12345'; GRANT ALL PRIVILEGES ON wordpress_db.* TO 'wordpress_user'@'%'; FLUSH PRIVILEGES;"

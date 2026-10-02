@@ -1,3 +1,8 @@
-[terraform-ansible-wordpress]
-3.137.167.27
+[wordpress]
+3.148.174.245
+
+[mysql]
+3.149.23.38
+
+
 
